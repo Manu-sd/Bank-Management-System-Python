@@ -50,6 +50,16 @@ class Bank:
 
 banks = []
 
+
+def check_account_exists(acc_no: int):
+
+    for obj in banks:
+        if obj.account == acc_no:
+            return obj
+
+    return None
+
+
 while True:
 
     print("\n====== BANK MANAGEMENT SYSTEM ======")
@@ -59,7 +69,8 @@ while True:
     print("4. Withdraw Money")
     print("5. Check Balance")
     print("6. Search Account")
-    print("7. Exit")
+    print("7. Transfer Amount")
+    print("8. Exit")
 
     try:
         choice = int(input("Enter your choice: "))
@@ -88,71 +99,105 @@ while True:
     # Deposit
     elif choice == 3:
 
-        if not banks:
-            print("No accounts available.")
-            continue
-
         acc_no = int(input("Enter Account Number: "))
 
-        for account in banks:
-            if account.account == acc_no:
-                account.deposit()
-                break
+        account = check_account_exists(acc_no)
+
+        if account:
+            account.deposit()
         else:
             print("Account not found!")
 
     # Withdraw
     elif choice == 4:
 
-        if not banks:
-            print("No accounts available.")
-            continue
-
         acc_no = int(input("Enter Account Number: "))
 
-        for account in banks:
-            if account.account == acc_no:
-                account.withdraw()
-                break
+        account = check_account_exists(acc_no)
+
+        if account:
+            account.withdraw()
         else:
             print("Account not found!")
 
     # Check Balance
     elif choice == 5:
 
-        if not banks:
-            print("No accounts available.")
-            continue
-
         acc_no = int(input("Enter Account Number: "))
 
-        for account in banks:
-            if account.account == acc_no:
-                account.show_balance()
-                break
+        account = check_account_exists(acc_no)
+
+        if account:
+            account.show_balance()
         else:
             print("Account not found!")
 
     # Search Account
     elif choice == 6:
 
-        if not banks:
-            print("No accounts available.")
-            continue
-
         acc_no = int(input("Enter Account Number: "))
 
-        for account in banks:
-            if account.account == acc_no:
-                account.show_info()
-                break
+        account = check_account_exists(acc_no)
+
+        if account:
+            account.show_info()
         else:
             print("Account not found!")
 
-    # Exit
+    # Transfer Amount
     elif choice == 7:
-        print("Thank you for using Bank Management System!")
+
+        from_acc_no = int(
+            input("Enter Sender Account Number: ")
+        )
+
+        to_acc_no = int(
+            input("Enter Receiver Account Number: ")
+        )
+
+        from_acc_obj = check_account_exists(
+            from_acc_no
+        )
+
+        to_acc_obj = check_account_exists(
+            to_acc_no
+        )
+
+        if from_acc_obj and to_acc_obj:
+
+            transfer_amount = float(
+                input("Enter Amount to Transfer: ₹")
+            )
+
+            if transfer_amount <= 0:
+
+                print("Invalid amount!")
+
+            elif from_acc_obj.balance < transfer_amount:
+
+                print("Insufficient Funds!")
+
+            else:
+
+                from_acc_obj.balance -= transfer_amount
+                to_acc_obj.balance += transfer_amount
+
+                print(
+                    f"₹{transfer_amount} transferred successfully!"
+                )
+
+        else:
+
+            print("One or both accounts not found!")
+
+    # Exit
+    elif choice == 8:
+
+        print(
+            "Thank you for using Bank Management System!"
+        )
         break
 
     else:
+
         print("Invalid choice! Please try again.")
